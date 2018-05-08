@@ -1,14 +1,26 @@
 //TODO: Pictures to snake/food
 //TODO: Better UI
-//FIXME: Walk backwards
+//FIXME: [x] Walk backwards
+//NOTE: Pressing 2 directions same time causes bug
 
 var snake;
 var gridScale = 30;
 
+var w = window.innerWidth;
+var h = window.innerHeight;
+
 var food;
+var mapSize = 900;
+var startPos = mapSize / 2;
+var trackMovement;
+
+var screenWidth;
+var screenHeight;
 
 function setup() {
-    createCanvas(800, 800);
+    screenWidth = calculateScreen(w, gridScale);
+    screenHeight = calculateScreen(h, gridScale);
+    createCanvas(screenWidth, screenHeight);
     snake = new Snake();
 
     frameRate(10);
@@ -29,6 +41,16 @@ function draw() {
     rect(food.x, food.y, gridScale, gridScale);
 }
 
+function calculateScreen(size, scale)
+{
+    var temp;
+    for(var i = scale; i < size; i += scale)
+    {
+        temp = i;
+    }
+    return temp;
+}
+
 function pickLocation() {
     var cols = floor(width/gridScale);
     var rows = floor(height/gridScale);
@@ -37,25 +59,61 @@ function pickLocation() {
 }
 
 function mousePressed() {
-    snake.total++;
+    snake.score++;
 }
 
 function keyPressed()
 {
     if(keyCode === UP_ARROW)
     {
-        snake.dir(0, -1);
+        if(trackMovement === "Down")
+        {
+            snake.dir(0, 1);
+            trackMovement = "Down";
+        }
+        else
+        {
+            snake.dir(0, -1);
+            trackMovement = "Up";
+        }
     }
     else if(keyCode === DOWN_ARROW)
     {
-        snake.dir(0, 1);
+        if(trackMovement === "Up")
+        {
+            snake.dir(0, -1);
+            trackMovement = "Up";
+        }
+        else
+        {
+            snake.dir(0, 1);
+            trackMovement = "Down";
+        }
     }
     else if(keyCode === LEFT_ARROW)
     {
-        snake.dir(-1, 0);
+        if(trackMovement === "Right")
+        {
+            snake.dir(1, 0);
+            trackMovement = "Right";
+        }
+        else
+        {
+            snake.dir(-1, 0);
+            trackMovement = "Left";
+        }
     }
     else if(keyCode === RIGHT_ARROW)
     {
-        snake.dir(1, 0);
+        if(trackMovement === "Left")
+        {
+            snake.dir(-1, 0);
+            trackMovement = "Left";
+        }
+        else
+        {
+            snake.dir(1, 0);
+            trackMovement = "Right";
+        }
     }
 }

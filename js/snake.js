@@ -1,24 +1,25 @@
 function Snake(){
-    this.x = 0;
-    this.y = 0;
-    this.xSpeed = 1;
+    this.x = startPos;
+    this.y = startPos;
+    this.xSpeed = 0;
     this.ySpeed = 0;
-    this.total = 0;
+    this.score = 0;
     this.tail = [];
-
-    this.eat = function(pos) {
-        var d = dist(this.x, this.y, pos.x, pos.y);
-        if (d < 1) {
-            this.total++;
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     this.dir = function(x, y) {
         this.xSpeed = x;
         this.ySpeed = y;
+    }
+
+    this.eat = function(pos) {
+        var d = dist(this.x, this.y, pos.x, pos.y);
+        if (d < 1) {
+            this.score++;
+            console.log("Score: " + this.score)
+            return true;
+        } else {
+            return false;
+        }
     }
 
     this.death = function() {
@@ -27,8 +28,13 @@ function Snake(){
             var d = dist(this.x, this.y, pos.x, pos.y);
             if (d < 1) {
                 console.log('starting over');
-                this.total = 0;
+                this.x = startPos;
+                this.y = startPos;
+                this.xSpeed = 0;
+                this.ySpeed = 0;
+                this.score = 0;
                 this.tail = [];
+                trackMovement = "";
             }
         }
     }
@@ -38,8 +44,8 @@ function Snake(){
         for (var i = 0; i < this.tail.length - 1; i++) {
             this.tail[i] = this.tail[i + 1];
         }
-        if (this.total >= 1) {
-            this.tail[this.total - 1] = createVector(this.x, this.y);
+        if (this.score >= 1) {
+            this.tail[this.score - 1] = createVector(this.x, this.y);
         }
 
         this.x = this.x + this.xSpeed * gridScale;
